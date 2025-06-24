@@ -1,105 +1,100 @@
 package controller;
 
-import javafx.event.ActionEvent;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Duration;
+import javafx.util.converter.DefaultStringConverter;
+import model.Cabina;
 
-public class Controlador {
+import java.net.URL;
+import java.util.ResourceBundle;
 
-    @FXML
-    private Button btnDetener1;
+public class Controlador implements Initializable {
 
-    @FXML
-    private Button btnDetener2;
+    @FXML private TableView<Cabina> tablaCabinas;
+    @FXML private TableColumn<Cabina, Integer> colNumero;
+    @FXML private TableColumn<Cabina, String> colInicio;
+    @FXML private TableColumn<Cabina, String> colContador;
+    @FXML private TableColumn<Cabina, String> colEstado;
+    @FXML private TableColumn<Cabina, String> colParaA;
+    @FXML private TableColumn<Cabina, String> colMensaje;
 
-    @FXML
-    private Button btnDetener3;
+    private ObservableList<Cabina> listaCabinas;
+    private Timeline timeline;
 
-    @FXML
-    private Button btnDetener4;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        tablaCabinas.setEditable(true);
 
-    @FXML
-    private Button btnDetener5;
+        colNumero.setCellValueFactory(cellData -> cellData.getValue().numeroProperty().asObject());
+        colInicio.setCellValueFactory(cellData -> cellData.getValue().inicioProperty());
+        colContador.setCellValueFactory(cellData -> cellData.getValue().contadorProperty());
+        colEstado.setCellValueFactory(cellData -> cellData.getValue().estadoProperty());
+        colMensaje.setCellValueFactory(cellData -> cellData.getValue().mensajeProperty());
 
-    @FXML
-    private Button btnIniciar1;
+        colParaA.setCellValueFactory(cellData -> cellData.getValue().paraAProperty());
+        colParaA.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
 
-    @FXML
-    private Button btnIniciar2;
+        colParaA.setOnEditCommit(event -> {
+            Cabina cabina = event.getRowValue();
+            String nuevoParaA = event.getNewValue().trim();
+            cabina.setParaA(nuevoParaA);
 
-    @FXML
-    private Button btnIniciar3;
+            int segundos = calcularDiferenciaEnSegundos(cabina.getInicio(), nuevoParaA);
+            cabina.setContadorSegundos(segundos);
 
-    @FXML
-    private Button btnIniciar4;
+            if (segundos > 0) {
+                cabina.setEstado("Activo");
+            } else {
+                cabina.setEstado("Desconectado");
+            }
+        });
 
-    @FXML
-    private Button btnIniciar5;
+        listaCabinas = FXCollections.observableArrayList();
+        listaCabinas.add(new Cabina(1, "10:00", 15 * 60, "Activo", "10:15", "Cliente frecuente"));
 
-    @FXML
-    private Label lblTiempo1;
+        tablaCabinas.setItems(listaCabinas);
 
-    @FXML
-    private Label lblTiempo2;
-
-    @FXML
-    private Label lblTiempo3;
-
-    @FXML
-    private Label lblTiempo4;
-
-    @FXML
-    private Label lblTiempo5;
-
-    @FXML
-    void detener1(ActionEvent event) {
-
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            for (Cabina cabina : listaCabinas) {
+                if (!cabina.isTerminado()) {
+                    cabina.restarSegundos(1);
+                    if (cabina.isTerminado()) {
+                        cabina.setEstado("Desconectado");
+                    }
+                }
+            }
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
-    @FXML
-    void detener2(ActionEvent event) {
+    private int calcularDiferenciaEnSegundos(String inicio, String paraA) {
+        try {
+            String[] ini = inicio.trim().split(":");
+            String[] fin = paraA.trim().split(":");
+            if (ini.length == 2 && fin.length == 2) {
+                int iniHoras = Integer.parseInt(ini[0]);
+                int iniMin = Integer.parseInt(ini[1]);
 
+                int finHoras = Integer.parseInt(fin[0]);
+                int finMin = Integer.parseInt(fin[1]);
+
+                int iniTotal = iniHoras * 3600 + iniMin * 60;
+                int finTotal = finHoras * 3600 + finMin * 60;
+
+                return Math.max(0, finTotal - iniTotal);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Formato inválido en hora: " + e.getMessage());
+        }
+        return 0;
     }
-
-    @FXML
-    void detener3(ActionEvent event) {
-
-    }
-
-    @FXML
-    void detener4(ActionEvent event) {
-
-    }
-
-    @FXML
-    void detener5(ActionEvent event) {
-
-    }
-
-    @FXML
-    void iniciar1(ActionEvent event) {
-
-    }
-
-    @FXML
-    void iniciar2(ActionEvent event) {
-
-    }
-
-    @FXML
-    void iniciar3(ActionEvent event) {
-
-    }
-
-    @FXML
-    void iniciar4(ActionEvent event) {
-
-    }
-
-    @FXML
-    void iniciar5(ActionEvent event) {
-
-    }
-
 }

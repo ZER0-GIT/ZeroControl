@@ -1,57 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controlador">
+<AnchorPane prefHeight="234.0" prefWidth="528.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controlador">
    <children>
-      <VBox prefHeight="400.0" prefWidth="600.0">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label alignment="CENTER" prefHeight="80.0" prefWidth="63.0" text="Cabina 1" />
-                  <Button fx:id="btnIniciar1" mnemonicParsing="false" onAction="#iniciar1" prefHeight="80.0" prefWidth="64.0" text="Iniciar" />
-                  <Button fx:id="btnDetener1" mnemonicParsing="false" onAction="#detener1" prefHeight="97.0" prefWidth="66.0" text="Detener" />
-                  <Label fx:id="lblTiempo1" alignment="CENTER" prefHeight="83.0" prefWidth="71.0" text="00:00:00" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label alignment="CENTER" prefHeight="80.0" prefWidth="63.0" text="Cabina 2" />
-                  <Button fx:id="btnIniciar2" mnemonicParsing="false" onAction="#iniciar2" prefHeight="80.0" prefWidth="64.0" text="Iniciar" />
-                  <Button fx:id="btnDetener2" mnemonicParsing="false" onAction="#detener2" prefHeight="97.0" prefWidth="66.0" text="Detener" />
-                  <Label fx:id="lblTiempo2" alignment="CENTER" prefHeight="83.0" prefWidth="71.0" text="00:00:00" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label alignment="CENTER" prefHeight="80.0" prefWidth="63.0" text="Cabina 3" />
-                  <Button fx:id="btnIniciar3" mnemonicParsing="false" onAction="#iniciar3" prefHeight="80.0" prefWidth="64.0" text="Iniciar" />
-                  <Button fx:id="btnDetener3" mnemonicParsing="false" onAction="#detener3" prefHeight="97.0" prefWidth="66.0" text="Detener" />
-                  <Label fx:id="lblTiempo3" alignment="CENTER" prefHeight="83.0" prefWidth="71.0" text="00:00:00" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="673.0">
-               <children>
-                  <Label alignment="CENTER" prefHeight="80.0" prefWidth="63.0" text="Cabina 4" />
-                  <Button fx:id="btnIniciar4" mnemonicParsing="false" onAction="#iniciar4" prefHeight="80.0" prefWidth="64.0" text="Iniciar" />
-                  <Button fx:id="btnDetener4" mnemonicParsing="false" onAction="#detener4" prefHeight="97.0" prefWidth="66.0" text="Detener" />
-                  <Label fx:id="lblTiempo4" alignment="CENTER" prefHeight="83.0" prefWidth="71.0" text="00:00:00" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label alignment="CENTER" prefHeight="80.0" prefWidth="63.0" text="Cabina 5" />
-                  <Button fx:id="btnIniciar5" mnemonicParsing="false" onAction="#iniciar5" prefHeight="80.0" prefWidth="64.0" text="Iniciar" />
-                  <Button fx:id="btnDetener5" mnemonicParsing="false" onAction="#detener5" prefHeight="97.0" prefWidth="66.0" text="Detener" />
-                  <Label fx:id="lblTiempo5" alignment="CENTER" prefHeight="83.0" prefWidth="71.0" text="00:00:00" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
+      <TableView fx:id="tablaCabinas" editable="true" prefHeight="233.0" prefWidth="529.0">
+        <columns>
+          <TableColumn fx:id="colNumero" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Nº Cabina" />
+          <TableColumn fx:id="colInicio" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Inicio" />
+            <TableColumn fx:id="colContador" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Contador" />
+            <TableColumn fx:id="colEstado" prefWidth="114.66661071777344" style="-fx-alignment: CENTER;" text="Estado" />
+            <TableColumn fx:id="colParaA" prefWidth="88.0" style="-fx-alignment: CENTER;" text="Parar a" />
+            <TableColumn fx:id="colMensaje" prefWidth="100.00003051757812" style="-fx-alignment: CENTER;" text="Mensaje" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>
