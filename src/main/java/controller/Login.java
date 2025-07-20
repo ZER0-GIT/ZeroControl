@@ -19,7 +19,7 @@ public class Login {
 
     Usuario usuario = new Usuario();
     private ConsultaUsuario consultaUsuario = new ConsultaUsuario();
-    main app = new main();
+    main app = new main(); //crea un objeto de la clase main con todos sus metodos abrir y cerrar ventanas
 
     @FXML
     private Button btnIngresar;
@@ -35,14 +35,14 @@ public class Login {
 
     @FXML
     void click(ActionEvent event) {
-        usuario.setUsuario(txtUsuario.getText());
-        usuario.setContrasena(pwdContrasena.getText());
-        if(consultaUsuario.buscar(usuario)){
-            Sesion.getInstance().iniciarSesion(usuario);
-            app.abrirVentana(Paths.ControladorFXML);
-            app.cerrarVentana((Stage) btnIngresar.getScene().getWindow());
+        usuario.setUsuario(txtUsuario.getText()); // guarda el usuario ingresado
+        usuario.setContrasena(pwdContrasena.getText());//guarda el password ingresado
+        if(consultaUsuario.buscar(usuario)){ // llama al metodo para buscar si el usuario y clave con correctos
+            Sesion.getInstance().iniciarSesion(usuario);// si es correcto inicia sesion
+            app.abrirVentana(Paths.ControladorFXML); //abre la ventaba Controlador
+            app.cerrarVentana((Stage) btnIngresar.getScene().getWindow());//“Cierra la ventana donde está el botón ‘Ingresar’.”
         }else{
             JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
-        }
+        }//mensaje de error si es incorrecto los datos
     }
 }

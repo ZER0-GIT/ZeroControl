@@ -13,7 +13,7 @@
             <TableColumn fx:id="colContador" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Contador" />
             <TableColumn fx:id="colEstado" prefWidth="114.66661071777344" style="-fx-alignment: CENTER;" text="Estado" />
             <TableColumn fx:id="colParaA" prefWidth="88.0" style="-fx-alignment: CENTER;" text="Parar a" />
-            <TableColumn fx:id="colMensaje" prefWidth="100.00003051757812" style="-fx-alignment: CENTER;" text="Mensaje" />
+            <TableColumn fx:id="colMensaje"  prefWidth="100.00003051757812" style="-fx-alignment: CENTER;" text="Mensaje" />
             <TableColumn fx:id="colMonto" prefWidth="100.00003051757812" style="-fx-alignment: CENTER;" text="Monto S/." />
         </columns>
       </TableView>

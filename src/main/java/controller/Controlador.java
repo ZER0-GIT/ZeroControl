@@ -35,6 +35,8 @@ public class Controlador implements Initializable {
 
     private ObservableList<Cabina> listaCabinas;
     private Timeline timeline;
+//estudiar estos dos metodos!!!
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -76,8 +78,17 @@ public class Controlador implements Initializable {
             }
         });
 
+        colMensaje.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
+
+        colMensaje.setOnEditCommit(event -> {
+            Cabina cabina = event.getRowValue();
+            String nuevoMensaje = event.getNewValue().trim();
+            cabina.setMensaje(nuevoMensaje);
+        });
+
+
         listaCabinas = FXCollections.observableArrayList();
-        for (int i = 1; i <= Config.cantPc; i++) {
+        for (int i = 1; i <= Config.cantPc; i++) {//Crea las cabinas que hay (cantidad definida en Config)
             listaCabinas.add(new Cabina(i,"",0,"Desconectado","","",""));
         }
         tablaCabinas.setItems(listaCabinas);
