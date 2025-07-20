@@ -4,9 +4,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="234.0" prefWidth="528.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controlador">
+<AnchorPane prefHeight="248.0" prefWidth="933.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controlador">
    <children>
-      <TableView fx:id="tablaCabinas" editable="true" prefHeight="233.0" prefWidth="529.0">
+      <TableView fx:id="tablaCabinas" editable="true" prefHeight="233.0" prefWidth="633.0">
         <columns>
           <TableColumn fx:id="colNumero" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Nº Cabina" />
           <TableColumn fx:id="colInicio" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Inicio" />
@@ -14,6 +14,7 @@
             <TableColumn fx:id="colEstado" prefWidth="114.66661071777344" style="-fx-alignment: CENTER;" text="Estado" />
             <TableColumn fx:id="colParaA" prefWidth="88.0" style="-fx-alignment: CENTER;" text="Parar a" />
             <TableColumn fx:id="colMensaje" prefWidth="100.00003051757812" style="-fx-alignment: CENTER;" text="Mensaje" />
+            <TableColumn fx:id="colMonto" prefWidth="100.00003051757812" style="-fx-alignment: CENTER;" text="Monto S/." />
         </columns>
       </TableView>
    </children>

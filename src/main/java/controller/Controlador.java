@@ -29,6 +29,7 @@ public class Controlador implements Initializable {
     @FXML private TableColumn<Cabina, String> colInicio;
     @FXML private TableColumn<Cabina, String> colContador;
     @FXML private TableColumn<Cabina, String> colEstado;
+    @FXML private TableColumn<Cabina, String> colMonto;
     @FXML private TableColumn<Cabina, String> colParaA;
     @FXML private TableColumn<Cabina, String> colMensaje;
 
@@ -44,6 +45,7 @@ public class Controlador implements Initializable {
         colContador.setCellValueFactory(cellData -> cellData.getValue().contadorProperty());
         colEstado.setCellValueFactory(cellData -> cellData.getValue().estadoProperty());
         colMensaje.setCellValueFactory(cellData -> cellData.getValue().mensajeProperty());
+        colMonto.setCellValueFactory(cellData -> cellData.getValue().montoProperty());
 
         colParaA.setCellValueFactory(cellData -> cellData.getValue().paraAProperty());
         colParaA.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
@@ -64,6 +66,7 @@ public class Controlador implements Initializable {
             }
             int segundos = calcularDiferenciaEnSegundos(cabina.getInicio(), nuevoParaA);
             cabina.setContadorSegundos(segundos);
+            cabina.setMonto(calcularImporte(segundos));
 
             if (segundos > 0) {
                 cabina.setEstado("Activo");
@@ -75,7 +78,7 @@ public class Controlador implements Initializable {
 
         listaCabinas = FXCollections.observableArrayList();
         for (int i = 1; i <= Config.cantPc; i++) {
-            listaCabinas.add(new Cabina(i,"",0,"Desconectado","",""));
+            listaCabinas.add(new Cabina(i,"",0,"Desconectado","","",""));
         }
         tablaCabinas.setItems(listaCabinas);
 
@@ -92,7 +95,7 @@ public class Controlador implements Initializable {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
-
+    private double calcularImporte(int segTotales){ return (double) Math.round((segTotales/60)*Config.precioMin*10)/10; }
     private int calcularDiferenciaEnSegundos(String inicio, String paraA) {
         try {
             String[] ini = inicio.trim().split(":");

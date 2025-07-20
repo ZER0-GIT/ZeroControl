@@ -11,14 +11,17 @@ public class Cabina {
     private final StringProperty estado;
     private final StringProperty paraA;
     private final StringProperty mensaje;
+    private final StringProperty monto;
 
-    public Cabina(int numero, String inicio, int contadorSegundos, String estado, String paraA, String mensaje) {
+    public Cabina(int numero, String inicio, int contadorSegundos, String estado, String paraA, String mensaje, String monto) {
         this.numero = new SimpleIntegerProperty(numero);
         this.inicio = new SimpleStringProperty(inicio);
         this.contadorSegundos = new SimpleIntegerProperty(contadorSegundos);
         this.estado = new SimpleStringProperty(estado);
         this.paraA = new SimpleStringProperty(paraA);
         this.mensaje = new SimpleStringProperty(mensaje);
+        this.monto = new SimpleStringProperty(monto);
+
 
         this.contadorFormateado = new StringBinding() {
             {
@@ -44,12 +47,15 @@ public class Cabina {
     public String getParaA() { return paraA.get(); }
     public String getMensaje() { return mensaje.get(); }
 
+    public String getMonto() { return monto.get(); }
+
     // Setters
     public void setInicio(String inicio) { this.inicio.set(inicio); }
     public void setContadorSegundos(int segundos) { this.contadorSegundos.set(segundos); }
     public void setEstado(String estado) { this.estado.set(estado); }
     public void setParaA(String paraA) { this.paraA.set(paraA); }
     public void setMensaje(String mensaje) { this.mensaje.set(mensaje); }
+    public void setMonto(double monto){ this.monto.set(String.valueOf(monto));}
 
     // Propiedades para TableView
     public IntegerProperty numeroProperty() { return numero; }
@@ -58,6 +64,8 @@ public class Cabina {
     public StringProperty estadoProperty() { return estado; }
     public StringProperty paraAProperty() { return paraA; }
     public StringProperty mensajeProperty() { return mensaje; }
+    public StringProperty montoProperty() { return monto; }
+
 
     public StringBinding contadorProperty() {
         return contadorFormateado;
