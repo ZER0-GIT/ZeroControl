@@ -4,13 +4,17 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javax.swing.JOptionPane;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Duration;
+import javafx.animation.Animation;
 import javafx.util.converter.DefaultStringConverter;
 
 import java.time.LocalTime;
@@ -20,6 +24,8 @@ import model.Cabina;
 import utils.Config;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Controlador implements Initializable {
@@ -32,8 +38,15 @@ public class Controlador implements Initializable {
     @FXML private TableColumn<Cabina, String> colMonto;
     @FXML private TableColumn<Cabina, String> colParaA;
     @FXML private TableColumn<Cabina, String> colMensaje;
+    @FXML private Button btnCortar;
+    @FXML private Button btnHoraLibre;
+    @FXML private Button btnMediaHora;
+    @FXML private Button btnUnaHora;
+    @FXML private Button btnDosHora;
+    @FXML private ListView<String> listHistorial;
 
     private ObservableList<Cabina> listaCabinas;
+    private List<String> historialBase = new ArrayList<>();
     private Timeline timeline;
 //estudiar estos dos metodos!!!
 
@@ -43,12 +56,11 @@ public class Controlador implements Initializable {
         tablaCabinas.setEditable(true);
 
         colNumero.setCellValueFactory(cellData -> cellData.getValue().numeroProperty().asObject());
-        colInicio.setCellValueFactory(cellData -> cellData.getValue().inicioProperty()); 
+        colInicio.setCellValueFactory(cellData -> cellData.getValue().inicioProperty());
         colContador.setCellValueFactory(cellData -> cellData.getValue().contadorProperty());
         colEstado.setCellValueFactory(cellData -> cellData.getValue().estadoProperty());
         colMensaje.setCellValueFactory(cellData -> cellData.getValue().mensajeProperty());
         colMonto.setCellValueFactory(cellData -> cellData.getValue().montoProperty());
-
         colParaA.setCellValueFactory(cellData -> cellData.getValue().paraAProperty());
         colParaA.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
 
@@ -63,17 +75,18 @@ public class Controlador implements Initializable {
                 nuevoParaA = hora.format(formato);
                 cabina.setParaA(nuevoParaA);
             } catch (DateTimeParseException e) {
-                System.out.println("Formato de hora inválido: " + nuevoParaA);
+                JOptionPane.showMessageDialog(null, "Formato de hora inválido: " + nuevoParaA+"/n Use el formato 00:00:00" );
                 cabina.setParaA("00:00:00");
             }
             int segundos = calcularDiferenciaEnSegundos(cabina.getInicio(), nuevoParaA);
             cabina.setContadorSegundos(segundos);
-            cabina.setMonto(calcularImporte(segundos));
+            int totalSegundos = segundos;
+            cabina.setSegundosTotales(totalSegundos);
+            cabina.setMonto(cabina.calcularImporte(cabina.getSegundosTotales()));
 
             if (segundos > 0) {
                 cabina.setEstado("Activo");
             } else {
-                JOptionPane.showMessageDialog(null, "Hora acabada", "La hora de la PC X", JOptionPane.INFORMATION_MESSAGE);
                 cabina.setEstado("Desconectado");
             }
         });
@@ -89,25 +102,41 @@ public class Controlador implements Initializable {
 
         listaCabinas = FXCollections.observableArrayList();
         for (int i = 1; i <= Config.cantPc; i++) {//Crea las cabinas que hay (cantidad definida en Config)
-            listaCabinas.add(new Cabina(i,"",0,"Desconectado","","",""));
+            listaCabinas.add(new Cabina(i,"",0,"Desconectado","","","0.0"));
         }
         tablaCabinas.setItems(listaCabinas);
+        iniciarTiempo();
+    }
+    private void iniciarTiempo() {
+            if (timeline != null && timeline.getStatus() == Animation.Status.RUNNING) {
+                return;
+            }
 
-        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            for (Cabina cabina : listaCabinas) {
-                if (!cabina.isTerminado()) {
-                    cabina.restarSegundos(1);
-                    if (cabina.isTerminado()) {
-                        cabina.setEstado("Desconectado");
+            timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                for (Cabina cabina : listaCabinas) {
+                    if (!cabina.isTerminado()) {
+                        if (cabina.getEstado().equals("Libre")) {
+                            cabina.sumarSegundos(1); // Cuenta progresiva
+                        } else {
+                            cabina.restarSegundos(1); // Cuenta regresiva
+                            if (cabina.isTerminado()) {
+                                cortarHora(new ActionEvent());
+                                JOptionPane.showMessageDialog(
+                                        null,
+                                        "Hora concluida",
+                                        "La hora de la PC " + cabina.getNumero(),
+                                        JOptionPane.INFORMATION_MESSAGE
+                                );
+                            }
+                        }
                     }
                 }
-            }
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-    }
-    private double calcularImporte(int segTotales){ return (double) Math.round((segTotales/60)*Config.precioMin*10)/10; }
-    private int calcularDiferenciaEnSegundos(String inicio, String paraA) {
+            }));
+
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
+        }
+        private int calcularDiferenciaEnSegundos(String inicio, String paraA) {
         try {
             String[] ini = inicio.trim().split(":");
             String[] fin = paraA.trim().split(":");
@@ -130,6 +159,93 @@ public class Controlador implements Initializable {
             System.out.println("Formato inválido en hora: " + e.getMessage());
         }
         return 0;
+    }
+    @FXML
+    void actionMediaHora(ActionEvent event) {
+        agregarTiempoACabinaSeleccionada(30);
+    }
+
+    @FXML
+    void actionUnaHora(ActionEvent event) {
+        agregarTiempoACabinaSeleccionada(60);
+    }
+
+    @FXML
+    void actionDosHoras(ActionEvent event) {
+        agregarTiempoACabinaSeleccionada(120);
+    }
+
+    @FXML
+    void cortarHora(ActionEvent event) {
+        Cabina cabina = tablaCabinas.getSelectionModel().getSelectedItem();
+        if (cabina != null) {
+            String mensaje = String.format("Cabina %d terminó a las %s - Tiempo: %s seg - Monto: %s",
+                    cabina.getNumero(),
+                    LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                    cabina.getSegundosTotales(),
+                    cabina.getMonto());
+            historialBase.add(mensaje);
+            listHistorial.getItems().setAll(historialBase);
+            cabina.setEstado("Desconectado");
+            cabina.setInicio("");
+            cabina.setMonto(0);
+            cabina.setContadorSegundos(0);
+            cabina.setParaA("");
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione una cabina primero.");
+        }
+    }
+
+    @FXML
+    void actionHoraLibre(ActionEvent event) {
+        Cabina cabina = tablaCabinas.getSelectionModel().getSelectedItem();
+        if (cabina.getParaA().isEmpty()){
+            cabina.setEstado("Libre");
+            cabina.setInicio(formatearHora(LocalTime.now()));
+            iniciarTiempo();
+
+        }else{
+            cortarHora(event);
+            actionHoraLibre(event);
+        }
+    }
+
+    private void agregarTiempoACabinaSeleccionada(int minutos) {
+        Cabina cabinaSeleccionada = tablaCabinas.getSelectionModel().getSelectedItem();
+        if (cabinaSeleccionada == null) {
+            JOptionPane.showMessageDialog(null, "Seleccione una cabina primero.");
+            return;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTime horaInicio;
+        LocalTime horaFin;
+        if (cabinaSeleccionada.getInicio().isEmpty()) {
+            horaInicio = LocalTime.now();
+            cabinaSeleccionada.setInicio(horaInicio.format(formatter));
+            horaFin = horaInicio.plusMinutes(minutos);
+        } else {
+            horaInicio = LocalTime.parse(cabinaSeleccionada.getInicio(), formatter);
+
+            if (!cabinaSeleccionada.getParaA().isEmpty()) {
+                horaFin = LocalTime.parse(cabinaSeleccionada.getParaA(), formatter).plusMinutes(minutos);
+            } else {
+                horaFin = horaInicio.plusMinutes(minutos);
+            }
+        }
+
+        cabinaSeleccionada.setParaA(horaFin.format(formatter));
+
+        int segundosTotales = calcularDiferenciaEnSegundos(horaInicio.format(formatter), horaFin.format(formatter));
+        cabinaSeleccionada.setSegundosTotales(segundosTotales);
+        cabinaSeleccionada.setContadorSegundos(segundosTotales);
+        cabinaSeleccionada.setMonto(cabinaSeleccionada.calcularImporte(segundosTotales));
+        cabinaSeleccionada.setEstado("Activo");
+        iniciarTiempo();
+    }
+
+
+    private String formatearHora(LocalTime hora) {
+        return hora.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 
 }

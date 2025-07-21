@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="248.0" prefWidth="933.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controlador">
+<AnchorPane prefHeight="684.0" prefWidth="1052.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controlador">
    <children>
-      <TableView fx:id="tablaCabinas" editable="true" prefHeight="233.0" prefWidth="633.0">
+      <TableView fx:id="tablaCabinas" editable="true" layoutX="5.0" layoutY="5.0" prefHeight="656.0" prefWidth="668.0">
         <columns>
           <TableColumn fx:id="colNumero" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Nº Cabina" />
           <TableColumn fx:id="colInicio" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Inicio" />
             <TableColumn fx:id="colContador" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Contador" />
             <TableColumn fx:id="colEstado" prefWidth="114.66661071777344" style="-fx-alignment: CENTER;" text="Estado" />
             <TableColumn fx:id="colParaA" prefWidth="88.0" style="-fx-alignment: CENTER;" text="Parar a" />
-            <TableColumn fx:id="colMensaje"  prefWidth="100.00003051757812" style="-fx-alignment: CENTER;" text="Mensaje" />
-            <TableColumn fx:id="colMonto" prefWidth="100.00003051757812" style="-fx-alignment: CENTER;" text="Monto S/." />
+            <TableColumn fx:id="colMensaje" prefWidth="143.0" style="-fx-alignment: CENTER;" text="Mensaje" />
+            <TableColumn fx:id="colMonto" prefWidth="96.0" style="-fx-alignment: CENTER;" text="Monto S/." />
         </columns>
       </TableView>
+      <Button fx:id="btnHoraLibre" layoutX="710.0" layoutY="110.0" mnemonicParsing="false" onAction="#actionHoraLibre" prefHeight="25.0" prefWidth="175.0" text="Hora Libre" />
+      <Button fx:id="btnUnaHora" layoutX="710.0" layoutY="186.0" mnemonicParsing="false" onAction="#actionUnaHora" prefHeight="25.0" prefWidth="175.0" text="1 Hora" />
+      <Button fx:id="btnDosHoras" layoutX="710.0" layoutY="224.0" mnemonicParsing="false" onAction="#actionDosHoras" prefHeight="25.0" prefWidth="175.0" text="2 Horas" />
+      <Button fx:id="btnMediaHora" layoutX="710.0" layoutY="148.0" mnemonicParsing="false" onAction="#actionMediaHora" prefHeight="25.0" prefWidth="175.0" text="30 minutos" />
+      <Label layoutX="827.0" layoutY="342.0" text="HISTORIAL" />
+      <ListView fx:id="listHistorial" layoutX="688.0" layoutY="359.0" prefHeight="301.0" prefWidth="352.0" />
+      <Button fx:id="btnCortar" layoutX="710.0" layoutY="73.0" mnemonicParsing="false" onAction="#cortarHora" prefHeight="25.0" prefWidth="175.0" text="Cortar" />
    </children>
 </AnchorPane>

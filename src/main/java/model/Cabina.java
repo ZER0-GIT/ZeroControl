@@ -2,6 +2,7 @@ package model;
 
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import utils.Config;
 
 public class Cabina {
     private final IntegerProperty numero;
@@ -12,6 +13,7 @@ public class Cabina {
     private final StringProperty paraA;
     private final StringProperty mensaje;
     private final StringProperty monto;
+    private int segundosTotales;
 
     public Cabina(int numero, String inicio, int contadorSegundos, String estado, String paraA, String mensaje, String monto) {
         this.numero = new SimpleIntegerProperty(numero);
@@ -47,6 +49,8 @@ public class Cabina {
     public String getParaA() { return paraA.get(); }
     public String getMensaje() { return mensaje.get(); }
 
+    public int getSegundosTotales() {return segundosTotales;}
+
     public String getMonto() { return monto.get(); }
 
     // Setters
@@ -56,6 +60,7 @@ public class Cabina {
     public void setParaA(String paraA) { this.paraA.set(paraA); }
     public void setMensaje(String mensaje) { this.mensaje.set(mensaje); }
     public void setMonto(double monto){ this.monto.set(String.valueOf(monto));}
+    public void setSegundosTotales(int segundosTotales) {this.segundosTotales = segundosTotales;}
 
     // Propiedades para TableView
     public IntegerProperty numeroProperty() { return numero; }
@@ -76,8 +81,15 @@ public class Cabina {
         if (nuevo < 0) nuevo = 0;
         contadorSegundos.set(nuevo);
     }
+    public void sumarSegundos(int segundos) {
+        int nuevo = contadorSegundos.get() + segundos;
+        contadorSegundos.set(nuevo);
+    }
+
+
 
     public boolean isTerminado() {
-        return contadorSegundos.get() <= 0;
+        return !estado.get().equalsIgnoreCase("Libre") && contadorSegundos.get() <= 0;
     }
+    public double calcularImporte(int segTotales){ return (double) Math.round((segTotales/60)* Config.precioMin*10)/10; }
 }
